@@ -1,0 +1,64 @@
+trigger:
+  branches:
+    include:
+      - main
+
+variables:
+  # Python version: 3.x
+  pythonVersion: '3.x'
+  # Folder name of this sub-repository
+  working-dir: '.'
+  # Project root folder
+  projectRoot: $(System.DefaultWorkingDirectory)/$(working-dir)
+
+pool:
+  vmImage: 'ubuntu-22.04'
+
+parameters:
+  - name: env
+    displayName: Target Environment
+    type: string
+    default: uat
+    values:
+      - dev
+      - uat
+
+  - name: tag
+    displayName: Target tests tag (use unquoted "all" to run every un-skipped test)
+    type: string
+    default: 'all'
+    values:
+      - tpp
+      - citizen
+      - sendMessage
+stages:
+  - stage: Feature_tests
+    dependsOn: [ ]
+    pool:
+      name: 'emd-${{ parameters.env }}-linux-app'
+    jobs:
+      - job: "${{ upper(parameters.env) }}_Run_all_feature_tests"
+        condition: and(succeeded(), or(eq('${{ parameters.tag }}', ''), eq('${{ parameters.tag }}', 'all')))
+        strategy:
+          maxParallel: 3
+          matrix:
+            gestione tpp:
+              current_tag: 'tpp'
+            gestione citizen:
+              current_tag: 'citizen'
+            gestione invio messaggi:
+              current_tag: 'sendMessage'
+        steps:
+          - checkout: self
+          - template: template\test-run.yml
+            parameters:
+              env: ${{ parameters.env }}
+              tag: '$(current_tag)'
+      - job: "${{ upper(parameters.env) }}_Run_feature_tests_by_tag"
+        condition: and(succeeded(), and( not(eq('${{ parameters.tag }}', '')), not(eq('${{ parameters.tag }}', 'all'))))
+        steps:
+          - checkout: self
+          - template: template\test-run.yml
+            parameters:
+              env: ${{ parameters.env }}
+              tag: ${{ parameters.tag }}

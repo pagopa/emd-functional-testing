@@ -1,0 +1,3 @@
+SECRETS_PATH: "config/emd_feature_secrets.yaml"
+TARGET_ENV: "dev"
+default_timeout: 5000
