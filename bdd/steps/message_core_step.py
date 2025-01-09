@@ -6,7 +6,7 @@ from conf.configuration import settings
 from api.message_core import send_messge
 
 
-@given('a message for the {citizen}')
+@given('{citizen not onboarded on {TppA}')
 def step_build_message(context, citizen):
     context.message = json.dumps({
         "messageId": "1234567890",

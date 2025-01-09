@@ -107,24 +107,6 @@ endpoints:
             type: string
             required: true
             pattern:  "(^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}-\\d{13}$)"
-      bloomFilterSearch:
-        method: GET
-        endpoint: "/filter/{fiscalCode}"
-        description: "Bloom filter search"
-        path_params:
-          - name: "fiscalCode"
-            type: string
-            required: true
-            pattern:  "(^([A-Za-z]{6}[0-9lmnpqrstuvLMNPQRSTUV]{2}[abcdehlmprstABCDEHLMPRST][0-9lmnpqrstuvLMNPQRSTUV]{2}[A-Za-z][0-9lmnpqrstuvLMNPQRSTUV]{3}[A-Za-z])$)|(^(\\d{11})$)"
-      getTppEnabledList:
-        method: GET
-        endpoint: "/list/{fiscalCode}/enabled/tpp"
-        description: "Get list of enabled tpp"
-        path_params:
-          - name: "fiscalCode"
-            type: string
-            required: true
-            pattern: "(^([A-Za-z]{6}[0-9lmnpqrstuvLMNPQRSTUV]{2}[abcdehlmprstABCDEHLMPRST][0-9lmnpqrstuvLMNPQRSTUV]{2}[A-Za-z][0-9lmnpqrstuvLMNPQRSTUV]{3}[A-Za-z])$)|(^(\\d{11})$)"
       getCitizenConsentStatus:
         method: GET
         endpoint: "/{fiscalCode}/{tppId}"
@@ -319,3 +301,5 @@ MessageDTO:
 
 CitizenA: "BRTVNL63E26X000U"
 CitizenB: "BRTVNL63E26X000A"
+TppA: "Test201234567890"
+TppB: "86363574890"
