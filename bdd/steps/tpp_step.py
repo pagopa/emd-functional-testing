@@ -1,5 +1,5 @@
 from behave import given, when, then
-from config.configuration import secrets
+from conf.configuration import secrets
 
 
 

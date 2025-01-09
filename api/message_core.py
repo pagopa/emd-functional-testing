@@ -2,7 +2,7 @@ import requests
 import json
 
 from conf.configuration import settings
-from bearer_token import bearer_token
+from api.bearer_token import bearer_token
 
 def send_messge(payload):
     environment = settings.environment
