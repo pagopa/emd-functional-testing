@@ -9,7 +9,7 @@ venv/
 .idea/
 
 # Ignore dynaconf secret files
-config/emd_feature_secrets.yaml
+conf/emd_feature_secrets.yaml
 
 #Test report
 /tests/reports/

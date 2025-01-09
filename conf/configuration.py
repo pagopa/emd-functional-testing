@@ -14,7 +14,7 @@ settings = Dynaconf(
 # Load the secrets for the specified environment
 secrets = {}
 
-all_secrets = Dynaconf(settings_files=settings.SECRETS_PATH)
+all_secrets = Dynaconf(settings_files=settings.secrets_path)
 
-if settings.TARGET_ENV in all_secrets:
-    secrets = all_secrets[settings.TARGET_ENV]
+if settings.environment in all_secrets:
+    secrets = all_secrets[settings.environment]
