@@ -1,15 +1,15 @@
 secrets_path: "conf/emd_feature_secrets.yaml"
 environment: dev
 domain:
-  dev:  "https://emd.dev.cstar.pagopa.it"
-  uat:  "https://uat.dev.cstar.pagopa.it"
+  dev:  "https://api-io.dev.cstar.pagopa.it"
+  uat:  "https://api-io.uat.cstar.pagopa.it"
   prod: ""
 
 endpoints:
-  base_path: "/emd/"
+  base_path: "/emd"
 
   message_core:
-    base_path: "/messega-core"
+    base_path: "/message-core"
     operations:
       send:
         method: POST
@@ -28,7 +28,7 @@ endpoints:
         description: "Get list of tpp"
         body_params:
           - name: "TppIdList"
-            reuired: true
+            required: true
       updateState:
         method: PUT
         endpoint: ""

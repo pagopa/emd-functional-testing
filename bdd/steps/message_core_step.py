@@ -8,7 +8,7 @@ from api.message_core import send_messge
 
 @given('a message for the {citizen}')
 def step_build_message(context, citizen):
-    context.messages = json.dumps({
+    context.message = json.dumps({
         "messageId": "1234567890",
         "recipientId": getattr(settings, citizen, None),
         "triggerDateTime": "2024-06-21T12:34:56Z",
@@ -19,9 +19,11 @@ def step_build_message(context, citizen):
         "associatedPayment": True
     })
 
+
 @when('a notification request arrives')
 def step_notification_request(context):
-    context.response_message = send_messge(context.message)
+    context.response = send_messge(context.message)
+
 
 @then('the response status must be {status_code}')
 def step_check_status_code(context, status_code):
@@ -29,8 +31,9 @@ def step_check_status_code(context, status_code):
         f"Expected status code {status_code}, got {context.response.status_code} instead."
     )
 
+
 @then('the answer must be {message_response}')
 def step_check_message_response(context, message_response):
-    assert json.loads(context.response.text)["message"] == message_response, (
+    assert context.response.text == message_response, (
         f"Expected message response {message_response}, got {json.loads(context.response.text)['message']} instead."
     )

@@ -42,19 +42,19 @@ def bearer_token_mil():
 def bearer_token():
     try:
 
-        url = secrets.token_info.mil_token_url
+        url = secrets.token_info.token_url
 
         payload = {
-                'client_id': secrets.token_info.mil_client_id,
-                'client_secret': secrets.token_info.mil_client_secret,
-                'grant_type': secrets.token_info.mil_grant_type
+                'client_id': secrets.token_info.client_id,
+                'client_secret': secrets.token_info.client_secret,
+                'grant_type': secrets.token_info.grant_type
             }
 
         headers = {
             'Content-Type': 'application/x-www-form-urlencoded'
         }
 
-        response = requests.request("POST", url, headers=headers, data=payload)
+        response = requests.request("POST", url, headers=headers, data=payload, verify=False)
 
         if response.status_code == 200:
             response_data = response.json()
