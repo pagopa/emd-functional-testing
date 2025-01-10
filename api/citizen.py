@@ -8,6 +8,7 @@ def save_consent(citizen,tpp):
         environment = settings.environment
         domain = settings.domain[environment] + settings.endpoints.base_path
         url = f'{domain}{settings.endpoints.citizen.base_path}/{citizen}/{tpp}'
+        print(f'[CITIZEN_API][SAVE_CONSENT] {url}')
         token = bearer_token()
         headers = {
             'Content-Type': 'application/json',
@@ -15,10 +16,10 @@ def save_consent(citizen,tpp):
         }
 
         response = requests.request("POST", url, headers=headers, verify=False)
-        print(response)
+        print(f'[CITIZEN_API][SAVE_CONSENT] {response}')
         return response
     except requests.exceptions.RequestException as e:
-        print(f"An error occurred: {e}")
+        print(f"[CITIZEN_API][SAVE_CONSENT] An error occurred: {e}")
         return None
 
 def get_consent(citizen,tpp):
@@ -26,6 +27,7 @@ def get_consent(citizen,tpp):
         environment = settings.environment
         domain = settings.domain[environment] + settings.endpoints.base_path
         url = f'{domain}{settings.endpoints.citizen.base_path}/{citizen}/{tpp}'
+        print(f'[CITIZEN_API][GET_CONSENT] {url}')
         token = bearer_token()
         headers = {
             'Content-Type': 'application/json',
@@ -33,10 +35,10 @@ def get_consent(citizen,tpp):
         }
 
         response = requests.request("GET", url, headers=headers, verify=False)
-        print(response)
+        print(f'[CITIZEN_API][GET_CONSENT] {response}')
         return response
     except requests.exceptions.RequestException as e:
-        print(f"An error occurred: {e}")
+        print(f"[CITIZEN_API][GET_CONSENT] An error occurred: {e}")
         return None
 
 def swithc_state(citizen, tpp):
@@ -51,9 +53,9 @@ def swithc_state(citizen, tpp):
             }
 
             response = requests.request("PUT", url, headers=headers, verify=False)
-            print(response)
+            print(f"[CITIZEN_API][SWITCH_STATE] {response}")
             return response
         except requests.exceptions.RequestException as e:
-            print(f"An error occurred: {e}")
+            print(f"[CITIZEN_API][SWITCH_STATE] An error occurred: {e}")
             return None
 

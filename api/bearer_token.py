@@ -24,7 +24,7 @@ def bearer_token_mil():
             access_token = response_data.get("access_token")
 
             if access_token:
-                print(f"Access Token: {access_token}")
+                #print(f"Access Token: {access_token}")
                 return access_token
             else:
                 print("Access token not found in the response.")
@@ -61,7 +61,7 @@ def bearer_token():
             access_token = response_data.get("access_token")
 
             if access_token:
-                print(f"Access Token: {access_token}")
+                #print(f"Access Token: {access_token}")
                 return access_token
             else:
                 print("Access token not found in the response.")

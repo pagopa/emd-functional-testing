@@ -4,8 +4,6 @@ from api.bearer_token import bearer_token
 from conf.configuration import settings
 
 
-
-
 def send_messge(payload):
     try:
         environment = settings.environment
