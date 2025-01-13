@@ -2,11 +2,6 @@
 # Feature fails if scenario ar not sorted
 Feature: Onboard on a tpp
 
-    #Could be done in a before all or before feature to void multiple equal calls
-    Background:
-        Given TppA is a valid tpp
-        And  TppB is a valid tpp
-
     #Scenario 1
     Scenario: Onboard user not already onboarded
         Given citizenA never onboarded
