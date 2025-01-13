@@ -49,6 +49,7 @@ def step_check_onboarded(context, citizen, tpp):
     citizen = getattr(settings, citizen, None)
     tpp = getattr(settings, tpp, None)
     status_code = api.save_consent(citizen, tpp).status_code
+    context.citizens.add(citizen)
     assert status_code == 200, (
         f"[CITIZEN_STEP][CHECK_ONBOARDED] Expected status code 200, got {status_code} instead."
     )
@@ -59,6 +60,7 @@ def step_check_onboarded_disabled(context, citizen, tpp):
     citizen = getattr(settings, citizen, None)
     tpp = getattr(settings, tpp, None)
     status_code = api.save_consent(citizen, tpp).status_code
+    context.citizens.add(citizen)
     assert status_code == 200, (
         f"[CITIZEN_STEP][CHECK_ONBOARDED] Expected status code 200, got {status_code} instead."
     )

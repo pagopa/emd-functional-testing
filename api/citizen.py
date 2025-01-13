@@ -67,3 +67,10 @@ def get_citizens_on_tpp(tpp):
     print(f"[CITIZEN_API][GET_CITIZENS_ON_TPP] {url}")
     token = bearer_token()
     return make_request("GET", url, token)
+
+
+def delete_consents(citizen):
+    url = build_url(settings.endpoints.citizen.base_path, "test", citizen)
+    print(f"[CITIZEN_API][GET_CITIZENS_ON_TPP] {url}")
+    token = bearer_token()
+    return make_request("DELETE", url, token)
