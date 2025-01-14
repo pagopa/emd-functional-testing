@@ -4,13 +4,13 @@ from behave import given
 from behave import then
 from behave import when
 from conf.configuration import settings
-from api.tpp import get_tpp
+from api.tpp import get_tpp_info
 
 
 @given('{tpp} is a valid tpp')
 def step_check_tpp(context, tpp):
     tpp = getattr(settings, tpp, None)
-    status_code = get_tpp(tpp).status_code
+    status_code = get_tpp_info(tpp).status_code
     assert status_code == 200, (
         f"[CITIZEN_STEP][CHECK_TPP]Expected status code 200, got {status_code} instead."
     )
@@ -19,7 +19,7 @@ def step_check_tpp(context, tpp):
 @given('{tpp} is not valid')
 def step_check_tpp_not_valid(context, tpp):
     tpp = getattr(settings, tpp, None)
-    status_code = get_tpp(tpp).status_code
+    status_code = get_tpp_info(tpp).status_code
     assert status_code == 404, (
         f"[CITIZEN_STEP][CHECK_TPP_NOT_VALID]Expected status code 404, got {status_code} instead."
     )
