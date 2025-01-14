@@ -12,6 +12,7 @@ Feature: Get the citizens onboarded on a tpp
     #Scenario 2
     Scenario: Tpp onboarded
         Given TppA is a valid tpp
+        And  citizenA already onboarded on TppA
         When a get citizens onboarded list for TppA request arrives
         Then the get citizens onboarded list request is successful
         And the tpp consents list is not empty

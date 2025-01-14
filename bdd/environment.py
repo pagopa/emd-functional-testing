@@ -7,7 +7,7 @@ def before_all(context):
 
 
 def after_feature(context, feature):
-    for citizen in context.fiscalCodes:
+    for citizen in context.citizens:
         api_citizen.delete_consents(citizen)
-        context.citizens.discard(citizen)
+    context.citizens = set()
 

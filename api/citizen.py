@@ -20,7 +20,7 @@ def make_request(method, url, token, headers=None):
     })
     try:
         response = requests.request(method, url, headers=headers, verify=False)
-        print(f"[CITIZEN_API][{method}] {response}")
+        # print(f"[CITIZEN_API][{method}] {response}")
         return response
     except requests.exceptions.RequestException as e:
         print(f"[CITIZEN_API][{method}] An error occurred: {e}")
@@ -70,7 +70,8 @@ def get_citizens_on_tpp(tpp):
 
 
 def delete_consents(citizen):
-    url = build_url(settings.endpoints.citizen.base_path, "test", citizen)
-    print(f"[CITIZEN_API][GET_CITIZENS_ON_TPP] {url}")
+    #url = build_url(settings.endpoints.citizen.base_path, "test", citizen)
+    url = f'http://10.11.0.254:8080/emd/citizen/test/{citizen}'
+    print(f"[CITIZEN_API][DELETE] {url}")
     token = bearer_token()
     return make_request("DELETE", url, token)
