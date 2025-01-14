@@ -2,7 +2,7 @@
 Feature: Send a notification
 
 
-    Scenario: User onboarded
+    Scenario: Onboard user not already onboarded
         Given citizenA already onboarded on TppA
         And a message for the citizenA
         When a notification request arrives
