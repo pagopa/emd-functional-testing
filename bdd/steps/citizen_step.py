@@ -47,10 +47,6 @@ def step_check_onboarded(context, citizen, tpp):
     citizen = getattr(settings, citizen, None)
     tpp = getattr(settings, tpp, None)
     tpp_id = tpp_api.get_tpp_by_entity_id(tpp)
-    print("TESTTTT",tpp)
-    print("TESTTTT",tpp_id)
-    print("TESTTTT", citizen)
-    print("TESTTTT",context.tpps)
     response = citizen_api.save_consent(citizen, tpp_id.json()["tppId"])
     context.citizens[citizen] = response.json()
     assert response.status_code == 200, (

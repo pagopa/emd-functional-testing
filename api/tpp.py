@@ -35,7 +35,6 @@ class TppAPI:
         return requests.request("GET", url, headers=headers, verify=False)
 
     def delete_tpp(self, tpp):
-        url = f'{self.domain}/delete/{tpp}'
-        url = f'http://10.11.0.106:8080/emd/tpp/test/delete/{tpp}'
+        url = f'{self.domain_mil}/test/delete/{tpp}'
         headers = {'Content-Type': 'application/json','Authorization': f'Bearer {richiesta_con_token("token_send")}'}
         return requests.request("DELETE", url, headers=headers, verify=False)

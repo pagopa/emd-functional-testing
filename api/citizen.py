@@ -46,8 +46,7 @@ class CitizenAPI:
         return requests.request("GET", url, headers=headers, verify=False)
 
     def delete_consents(self, citizen):
-        url = f'{self.domain}/test/delete{citizen}'
-        url = f'http://10.11.0.121:8080/emd/citizen/test/delete/{citizen}'
+        url = f'{self.domain_mil}/test/delete/{citizen}'
         headers = { 'Content-Type': 'application/json', 'Authorization': f'Bearer {richiesta_con_token("token_send")}'}
         return requests.request("DELETE", url, headers=headers, verify=False)
 

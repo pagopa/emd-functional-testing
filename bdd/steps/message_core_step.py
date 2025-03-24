@@ -27,7 +27,6 @@ def step_build_message(context, citizen):
 @when('a notification request arrives')
 def step_notification_request(context):
     context.response = message_core_api.send_message(context.message)
-    print("TESTTTT",context.response.json())
 
 
 @then('the response status must be {status_code}')

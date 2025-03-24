@@ -11,10 +11,6 @@ class PaymentCoreAPI:
     def retrieval_tokens(self, payload, tpp_name):
         url = f'{self.domain}/retrievalTokens'
         headers = { 'Content-Type': 'application/json', 'Authorization': f'Bearer {richiesta_con_token(tpp_name)}'}
-        print("TESTTT1",url)
-        print("TESTTT2", headers)
-        print("TESTTT3", payload)
-        print("TESTTT4",tpp_name)
         return requests.request("POST", url, headers=headers, data=payload, verify=False)
 
 
