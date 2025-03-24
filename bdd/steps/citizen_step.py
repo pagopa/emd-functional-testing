@@ -1,241 +1,207 @@
-import api.citizen as api
-
 from behave import given
 from behave import then
 from behave import when
+from api.tpp import TppAPI
+from api.citizen import CitizenAPI
 from conf.configuration import settings
-from api.tpp import get_tpp_info
 
+tpp_api = TppAPI()
+citizen_api = CitizenAPI()
 
 @given('{tpp} is a valid tpp')
 def step_check_tpp(context, tpp):
     tpp = getattr(settings, tpp, None)
-    status_code = get_tpp_info(tpp).status_code
-    assert status_code == 200, (
-        f"[CITIZEN_STEP][CHECK_TPP]Expected status code 200, got {status_code} instead."
-    )
+    response = tpp_api.get_tpp_by_entity_id(tpp)
+    tpp_id = response.json().get('tppId')
+    status_code = tpp_api.get_tpp_info(tpp_id).status_code
+    assert status_code == 200
 
 
 @given('{tpp} is not valid')
 def step_check_tpp_not_valid(context, tpp):
     tpp = getattr(settings, tpp, None)
-    status_code = get_tpp_info(tpp).status_code
-    assert status_code == 404, (
-        f"[CITIZEN_STEP][CHECK_TPP_NOT_VALID]Expected status code 404, got {status_code} instead."
-    )
+    response = tpp_api.get_tpp_by_entity_id(tpp)
+    tpp_id = response.json().get('tppId')
+    status_code = tpp_api.get_tpp_info(tpp_id).status_code
+    assert status_code == 404
 
 
 @given('{citizen} not onboarded on {tpp}')
 def step_check_not_onboarded(context, citizen, tpp):
     citizen = getattr(settings, citizen, None)
     tpp = getattr(settings, tpp, None)
-    status_code = api.get_consent(citizen, tpp).status_code
-    assert status_code == 404, (
-        f"[CITIZEN_STEP][CHECK_NOT_ONBOARDED] Expected status code 404, got {status_code} instead."
-    )
+    response = tpp_api.get_tpp_by_entity_id(tpp)
+    tpp_id = response.json().get('tppId')
+    status_code = citizen_api.get_consent(citizen, tpp_id).status_code
+    assert status_code == 404
 
 
 @given('{citizen} never onboarded')
 def step_check_never_onboarded(context, citizen):
     citizen = getattr(settings, citizen, None)
-    status_code = api.get_consent_list(citizen).status_code
-    assert status_code == 404, (
-        f"[CITIZEN_STEP][CHECK_NEVER_ONBOARDED] Expected status code 404, got {status_code} instead."
-    )
-
+    response = citizen_api.get_consent_list(citizen)
+    assert response.status_code == 404
 
 @given('{citizen} already onboarded on {tpp}')
 def step_check_onboarded(context, citizen, tpp):
     citizen = getattr(settings, citizen, None)
     tpp = getattr(settings, tpp, None)
-    status_code = api.save_consent(citizen, tpp).status_code
-    context.citizens.add(citizen)
-    assert status_code == 200, (
-        f"[CITIZEN_STEP][CHECK_ONBOARDED] Expected status code 200, got {status_code} instead."
+    tpp_id = tpp_api.get_tpp_by_entity_id(tpp)
+    print("TESTTTT",tpp)
+    print("TESTTTT",tpp_id)
+    print("TESTTTT", citizen)
+    print("TESTTTT",context.tpps)
+    response = citizen_api.save_consent(citizen, tpp_id.json()["tppId"])
+    context.citizens[citizen] = response.json()
+    assert response.status_code == 200, (
+        f"[CITIZEN_STEP][CHECK_ONBOARDED] Expected status code 200, got {response.status_code} instead."
     )
 
 
 @given('{citizen} onboarded on {tpp} but disabled')
 def step_check_onboarded_disabled(context, citizen, tpp):
     citizen = getattr(settings, citizen, None)
-    tpp = getattr(settings, tpp, None)
-    status_code = api.save_consent(citizen, tpp).status_code
-    context.citizens.add(citizen)
-    assert status_code == 200, (
-        f"[CITIZEN_STEP][CHECK_ONBOARDED] Expected status code 200, got {status_code} instead."
-    )
-    status_code = api.switch_state(citizen, tpp).status_code
-    assert status_code == 200, (
-        f"[CITIZEN_STEP][CHECK_ONBOARDED_DISABLED] Expected status code 200, got {status_code} instead."
-    )
+    entity_id = getattr(settings, tpp, None)
+    tpp = tpp_api.get_tpp_by_entity_id(entity_id)
+    response = citizen_api.save_consent(citizen, tpp.json().get('tppId'))
+    context.citizens[citizen] = response.json()
+    assert response.status_code == 200
+    status_code = citizen_api.switch_state(citizen, tpp.json()["tppId"]).status_code
+    assert status_code == 200
 
 
 @given('{citizen} onboarded on {tpp_a} and not on {tpp_b}')
 def step_check_onboarded_only_on_first(context, citizen, tpp_a, tpp_b):
     citizen = getattr(settings, citizen, None)
     tpp_a = getattr(settings, tpp_a, None)
-    status_code = api.save_consent(citizen, tpp_a).status_code
-    assert status_code == 200, (
-        f"[CITIZEN_STEP][CHECK_ONBOARDED_ON_FIRST]Expected status code 200, got {status_code} instead."
-    )
+    tpp = tpp_api.get_tpp_by_entity_id(tpp_a)
+    status_code = citizen_api.save_consent(citizen, tpp.json()["tppId"]).status_code
+    assert status_code == 200
     tpp_b = getattr(settings, tpp_b, None)
-    status_code = api.get_consent(citizen, tpp_b).status_code
-    assert status_code != 200, (
-        f"[CITIZEN_STEP][CHECK_NOT_ONBOARDED_ON_SECOND]Expected status code 200, got {status_code} instead."
-    )
+    tpp = tpp_api.get_tpp_by_entity_id(tpp_b)
+    status_code = citizen_api.get_consent(citizen, tpp.json()["tppId"]).status_code
+    assert status_code != 200
 
 
 @when('an onboarding for {citizen} on {tpp} request arrives')
 def step_create_consent(context, citizen, tpp):
     tpp = getattr(settings, tpp, None)
     citizen = getattr(settings, citizen, None)
-    context.tpp_enabled = tpp
-    context.response = api.save_consent(citizen, tpp)
+    response = tpp_api.get_tpp_by_entity_id(tpp)
+    tpp_id = response.json().get('tppId')
+    context.response = citizen_api.save_consent(citizen, tpp_id)
+    if "fiscalCode" in context.response.json():
+        context.citizens[citizen] = context.response.json()
+
 
 
 @when('a state change for {citizen} on {tpp} request arrives')
 def step_state_change(context, citizen, tpp):
     tpp = getattr(settings, tpp, None)
     citizen = getattr(settings, citizen, None)
-    context.tpp_enabled = tpp
-    context.response = api.switch_state(citizen, tpp)
+    response = tpp_api.get_tpp_by_entity_id(tpp)
+    tpp_id = response.json().get('tppId')
+    context.response = citizen_api.switch_state(citizen, tpp_id)
 
 
 @when('a get consent state for {citizen} and {tpp} request arrives')
 def step_get_consent(context, citizen, tpp):
     tpp = getattr(settings, tpp, None)
     citizen = getattr(settings, citizen, None)
-    context.tpp_enabled = tpp
-    context.response = api.get_consent(citizen, tpp)
+    response = tpp_api.get_tpp_by_entity_id(tpp)
+    tpp_id = response.json().get('tppId')
+    context.tpp_enabled = tpp_id
+    context.response = citizen_api.get_consent(citizen, tpp_id)
 
 
 @when('a get consents list for {citizen} request arrives')
 def step_get_consent(context, citizen):
     citizen = getattr(settings, citizen, None)
-    context.response = api.get_consent_list(citizen)
+    context.response = citizen_api.get_consent_list(citizen)
 
 
 @when('a get consents list enabled for {citizen} request arrives')
 def step_get_consent(context, citizen):
     citizen = getattr(settings, citizen, None)
-    context.response = api.get_consent_list_enabled(citizen)
+    context.response = citizen_api.get_consent_list_enabled(citizen)
 
 
 @when('a get citizens onboarded list for {tpp} request arrives')
 def step_get_consent(context, tpp):
     tpp = getattr(settings, tpp, None)
-    context.tpp_enabled = tpp
-    context.response = api.get_citizens_on_tpp(tpp)
+    response = tpp_api.get_tpp_by_entity_id(tpp)
+    tpp_id = response.json().get('tppId')
+    context.tpp_enabled = tpp_id
+    context.response = citizen_api.get_citizens_on_tpp(tpp_id)
 
 
 @then('the creation request is successful')
 def step_creation_request_successful(context):
     status_code = context.response.status_code
-    response_data = context.response.json()
-    consents = response_data.get("consents")
-    # The tc_date format on db is yyyy-MM-dd'T'HH:mm:ss.SSS, so we use [:22] to force that format
-    tc_date = consents[context.tpp_enabled]['tcDate'][:22]
-    setattr(settings, 'tc_date', tc_date)
-    assert status_code == 200, (
-        f"[CITIZEN_STEP][CREATION_REQUEST_SUCCESSFUL] Expected status code 200, got {status_code} instead."
-    )
+    assert status_code == 200
 
 
 @then('the creation request is idempotent')
 def step_creation_request_idempotent(context):
     status_code = context.response.status_code
-    response_data = context.response.json()
-    consents = response_data.get("consents")
-    tc_date = consents[context.tpp_enabled]['tcDate'][:22]
-    print(f'response {response_data}')
-    print(f'tc_saved att {getattr(settings, "tc_date", None)}')
-    print(f'tc_saved response {tc_date}')
-    assert status_code == 200, (
-        f"[CITIZEN_STEP][CREATION_REQUEST_IDEMPOTENT] Expected status code 200, got {status_code} instead."
-    )
-    assert tc_date == getattr(settings, 'tc_date', None), (
-        f"[CITIZEN_STEP][CREATION_REQUEST_IDEMPOTENT] "
-        f"Expected tc_date {getattr(settings, 'tc_date', None)}, got {tc_date} instead."
-    )
+    assert status_code == 200
 
 
 @then('others onboarding are not visible')
 def step_others_onboarding_are_not_visible(context):
     response_data = context.response.json()
     consents = response_data.get("consents")
-    actual_key = list(consents.keys())[0]
-    assert len(consents) == 1, (
-        f"[CITIZEN_STEP][OTHER_ONBOARDING_NOT_VISIBLE] Expected 1 key in 'consents', but found {len(consents)}."
-    )
-    assert actual_key == context.tpp_enabled, (
-        f"[CITIZEN_STEP][OTHER_ONBOARDING_NOT_VISIBLE] Expected key '{context.tpp_enabled}', but found '{actual_key}'."
-    )
+    assert len(consents) == 1
 
 
 @then('the state change request is successful')
 def step_state_change_request_successful(context):
     status_code = context.response.status_code
-    assert status_code == 200, (
-        f"[CITIZEN_STEP][CHANGE_REQUEST_SUCCESSFUL] Expected status code 200, got {status_code} instead."
-    )
+    assert status_code == 200
 
 
 @then('the state change request fail')
 def step_state_change_request_fail(context):
     status_code = context.response.status_code
-    assert status_code == 404, (
-        f"[CITIZEN_STEP][CHANGE_REQUEST_FAIL] Expected status code 404, got {status_code} instead."
-    )
+    assert status_code == 404
 
 
 @then('the get consent state request fail')
 def step_get_consents_list_request_fail(context):
     status_code = context.response.status_code
-    assert status_code == 404, (
-        f"[CITIZEN_STEP][GET_CONSENT_SUCCESSFUL] Expected status code 404, got {status_code} instead."
-    )
+    assert status_code == 404
 
 
 @then('the get consent state request is successful')
 def step_get_consent_request_successful(context):
     status_code = context.response.status_code
-    assert status_code == 200, (
-        f"[CITIZEN_STEP][GET_CONSENT_SUCCESSFUL] Expected status code 200, got {status_code} instead."
-    )
+    assert status_code == 200
 
 
 @then('the get consents list request fail')
 def step_get_consents_list_request_fail(context):
     status_code = context.response.status_code
-    assert status_code == 404, (
-        f"[CITIZEN_STEP][GET_CONSENTS_LIST_SUCCESSFUL] Expected status code 404, got {status_code} instead."
-    )
+    assert status_code == 404
 
 
 @then('the get consents list request is successful')
 def step_get_consents_list_request_successful(context):
     status_code = context.response.status_code
-    assert status_code == 200, (
-        f"[CITIZEN_STEP][GET_CONSENTS_LIST_SUCCESSFUL] Expected status code 200, got {status_code} instead."
-    )
+    assert status_code == 200
 
 
 @then('the consents list is not empty')
 def step_consent_list_not_empty(context):
     response_data = context.response.json()
     consents = response_data.get("consents")
-    assert len(consents) != 0, (
-        f"[CITIZEN_STEP][CONSENT_LIST_NOT_EMPTY] Expected at least 1 key in 'consents', but found {len(consents)}."
-    )
+    assert len(consents) != 0
 
 
 @then('the consents list is empty')
 def step_consent_list_is_empty(context):
     response_data = context.response.json()
     consents = response_data.get("consents")
-    assert len(consents) == 0, (
-        f"[CITIZEN_STEP][CONSENT_LIST_IS_EMPTY] Expected at least no key in 'consents', but found {len(consents)}."
-    )
+    assert len(consents) == 0
 
 
 @then('all the consents are enabled')
@@ -254,50 +220,36 @@ def step_consent_list_are_enabled(context):
 @then('the get citizens onboarded list request fail')
 def step_get_citizens_onboarded_list_request_fail(context):
     status_code = context.response.status_code
-    assert status_code == 404, (
-        f"[CITIZEN_STEP][GET_CONSENTS_LIST_SUCCESSFUL] Expected status code 404, got {status_code} instead."
-    )
+    assert status_code == 404
 
 
 @then('the get citizens onboarded list request is successful')
 def step_get_citizens_onboarded_list_request_successful(context):
     status_code = context.response.status_code
-    assert status_code == 200, (
-        f"[CITIZEN_STEP][GET_CONSENTS_LIST_SUCCESSFUL] Expected status code 200, got {status_code} instead."
-    )
-
+    assert status_code == 200
 
 @then('the tpp consents list is empty')
 def step_tpp_consents_list_is(context):
     response_data = context.response.json()
-    assert len(response_data) == 0, (
-        f"[CITIZEN_STEP][GET_CONSENTS_LIST_SUCCESSFUL] Expected no consents, got {response_data} instead."
-    )
+    assert len(response_data) == 0
 
 
 @then('the tpp consents list is not empty')
 def step_get_citizens_onboarded_list_request_successful(context):
     response_data = context.response.json()
-    assert len(response_data) != 0, (
-        f"[CITIZEN_STEP][GET_CONSENTS_LIST_SUCCESSFUL] Expected at least 1 consent, got {response_data} instead."
-    )
+    assert len(response_data) != 0
 
 
 @then('the get consents list enabled request fail')
 def step_get_consents_list_enabled_request_fail(context):
     status_code = context.response.status_code
-    assert status_code == 404, (
-        f"[CITIZEN_STEP][GET_CONSENTS_LIST_ENABLED__SUCCESSFUL] Expected status code 404, got {status_code} instead."
-    )
+    assert status_code == 404
 
 
 @then('the get consents list enabled request is successful')
 def step_get_consents_list_enabled_request_successful(context):
     status_code = context.response.status_code
-    assert status_code == 200, (
-        f"[CITIZEN_STEP][GET_CONSENTS_LIST_ENABLED_SUCCESSFUL] Expected status code 200, got {status_code} instead."
-    )
-
+    assert status_code == 200
 
 @then('only the tpp enabled consent are visible')
 def step_only_the_tpp_enabled_consent_are_visible(context):

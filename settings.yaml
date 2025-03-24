@@ -5,8 +5,50 @@ domain:
   uat:  "https://api-io.uat.cstar.pagopa.it"
   prod: ""
 
+domain_mil:
+  dev:  "https://mil.weu.internal.dev.cstar.pagopa.it"
+  uat:  "https://mil.weu.internal.uat.cstar.pagopa.it"
+  prod: ""
+
 endpoints:
+  base_path_tpp: "/emdtpp"
+  base_path_citizen: "/emdcitizen"
   base_path: "/emd"
+
+  payment_core:
+    base_path: "/payment"
+    operations:
+      retrievalTokens:
+        method: POST
+        endpoint: "/retrievalTokens/{entityId}"
+        path_params:
+          - body_params:
+              - name: "RetrievalRequestDTO"
+                required: true
+          - name: "entityId"
+            type: string
+            required: true
+      getRetrieval:
+        method: GET
+        endpoint: "/retrievalTokens/{retrievalId}"
+        path_params:
+          - name: "retrievalId"
+            type: string
+            required: true
+      generateDeepLink:
+        method: GET
+        endpoint: "/token"
+        request_params:
+          - name: "retrievalId"
+            type: string
+            required: true
+          - name: "fiscalCode"
+            type: string
+            required: true
+          - name: "noticeNumber"
+            type: string
+            required: true
+
 
   message_core:
     base_path: "/message-core"
@@ -49,6 +91,14 @@ endpoints:
         description: "TppDTOWithoutTokenSection to update"
         body_params:
           - name: "TppDTOWithoutTokenSection"
+            required: true
+      getTppByEntityId:
+        method: GET
+        endpoint: "/entityId/{entityId}"
+        description: "Get tpp by entityId"
+        path_params:
+          - name: "entityId"
+            type: string
             required: true
       updateTokenSection:
         method: PUT
@@ -271,6 +321,14 @@ TppIdList:
       items:
         type: string
 
+RetrievalRequestDTO:
+  type: object
+  properties:
+    agent:
+      type: string
+    originId:
+      type: string
+
 MessageDTO:
   type: object
   properties:
@@ -298,10 +356,25 @@ MessageDTO:
         status:
           type: string
 
-TppDTOCreationPayload:
-  tppId: ""
-  entityId: "TPPFKB0123456789"
-  businessName: "A"
+CitizenA: "BRTVNL63E26X000A"
+CitizenB: "BRTVNL63E26X000B"
+CitizenC: "BRTVNL63E26X000C"
+CitizenD: "BRTVNL63E26X000D"
+
+CitizenS: "BRTVNL63E26X000S"
+
+TppFakeEntityIdA: "AAAAAAAAAAAAAAAA"
+TppFakeEntityIdB: "BBBBBBBBBBBBBBBB"
+TppFakeEntityIdC: "CCCCCCCCCCCCCCCC"
+TppFakeEntityIdD: "DDDDDDDDDDDDDDDD"
+
+TppFakeEntityIdS: "SSSSSSSSSSSSSSSS"
+
+TppFakeEntityId: "TPPFKB0000000000"
+
+TppDtoFake:
+  entityId: ""
+  businessName: "bussinessName"
   messageUrl: "https://collaudo.codiceweb.com/test"
   authenticationUrl: "https://collaudo.codiceweb.com/test"
   idPsp: "mastercard123"
@@ -317,12 +390,20 @@ TppDTOCreationPayload:
       grant_type: "client_credentials"
       client_secret: "client_secret"
     contentType: "application/x-www-form-urlencoded"
-  state: true
+  paymentButton: "button"
+  agentDeepLinks:
+    ios: "https://mil.weu.internal.uat.cstar.pagopa.it/emdpaymentcore/stub/emd/payment/payment"
 
-CitizenA: "BRTVNL63E26X000A"
-CitizenB: "BRTVNL63E26X000B"
-CitizenC: "BRTVNL63E26X000C"
-TppA: "a0c50d74-a83d-4ef4-978a-ac1901e4b5db-0732208114820"
-TppB: "b0c50d74-a83d-4ef4-978a-bc1901e4b5db-0732208114820"
-TppC: "c0c50d74-a83d-4ef4-978a-bc1901e4b5db-0732208114820"
-TppD: "d0c50d74-a83d-4ef4-978a-bc1901e4b5db-0732208114820"
+TppNameA: "Fucino"
+AgentA: "ios"
+EntityIdA: "01234567899"
+OriginIdA: "OriginId"
+FiscalCodeA: "DNTCRL65S67M126L"
+NoticeNumberA: "3333333333"
+
+TppNameB: "Hype"
+AgentB: "ioS"
+EntityId: "123123123"
+OriginIdB: "OriginId"
+
+AgentC: "android"

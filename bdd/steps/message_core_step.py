@@ -1,15 +1,19 @@
 import json
+import random
+import string
+
 from behave import given
 from behave import then
 from behave import when
+from api.message_core import MessageCoreAPI
 from conf.configuration import settings
-from api.message_core import send_messge
 
+message_core_api = MessageCoreAPI()
 
 @given('a message for the {citizen}')
 def step_build_message(context, citizen):
     context.message = json.dumps({
-        "messageId": "1234567890",
+        "messageId": generate_random_id(),
         "recipientId": getattr(settings, citizen, None),
         "triggerDateTime": "2024-06-21T12:34:56Z",
         "senderDescription": "Comune di Pontecagnano",
@@ -22,7 +26,8 @@ def step_build_message(context, citizen):
 
 @when('a notification request arrives')
 def step_notification_request(context):
-    context.response = send_messge(context.message)
+    context.response = message_core_api.send_message(context.message)
+    print("TESTTTT",context.response.json())
 
 
 @then('the response status must be {status_code}')
@@ -34,6 +39,9 @@ def step_check_status_code(context, status_code):
 
 @then('the answer must be {message_response}')
 def step_check_message_response(context, message_response):
-    assert context.response.text == message_response, (
-        f"Expected message response {message_response}, got {json.loads(context.response.text)['message']} instead."
+    assert context.response.json().get("outcome") == message_response, (
+        f"Expected message response {message_response}, got {json.loads(context.response)['outcome']} instead."
     )
+
+def generate_random_id():
+    return ''.join(random.choices(string.ascii_uppercase + string.digits, k=15))

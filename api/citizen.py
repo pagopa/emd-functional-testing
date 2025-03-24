@@ -1,77 +1,53 @@
 import requests
-from api.bearer_token import bearer_token
 from conf.configuration import settings
+from api.bearer_token import richiesta_con_token
+
+class CitizenAPI:
+
+    def __init__(self):
+        self.environment = settings.environment
+        self.domain = f'{settings.domain[self.environment]}{settings.endpoints.base_path}{settings.endpoints.citizen.base_path}'
+        self.domain_mil = f'{settings.domain_mil[self.environment]}{settings.endpoints.base_path_citizen}{settings.endpoints.base_path}{settings.endpoints.citizen.base_path}'
+
+    def save_consent(self, citizen, tpp):
+        url = f'{self.domain}/{citizen}/{tpp}'
+        headers = { 'Content-Type': 'application/json', 'Authorization': f'Bearer {richiesta_con_token("token_send")}'}
+        return requests.request("POST", url, headers=headers, verify=False)
+
+    def get_consent(self, citizen, tpp):
+        url = f'{self.domain}/{citizen}/{tpp}'
+        headers = { 'Content-Type': 'application/json', 'Authorization': f'Bearer {richiesta_con_token("token_send")}'}
+        return requests.request("GET", url, headers=headers, verify=False)
 
 
-def build_url(*paths):
-    """Constructs a complete URL based on environment and given path components."""
-    environment = settings.environment
-    domain = settings.domain[environment] + settings.endpoints.base_path
-    return f"{domain}{'/'.join(paths)}"
+    def switch_state(self, citizen, tpp):
+        url = f'{self.domain_mil}/{citizen}/{tpp}'
+        headers = { 'Content-Type': 'application/json', 'Authorization': f'Bearer {richiesta_con_token("token_send")}'}
+        return requests.request("PUT", url, headers=headers, verify=False)
 
+    def get_consent(self, citizen, tpp):
+        url = f'{self.domain}/{citizen}/{tpp}'
+        headers = { 'Content-Type': 'application/json', 'Authorization': f'Bearer {richiesta_con_token("token_send")}'}
+        return requests.request("GET", url, headers=headers, verify=False)
 
-def make_request(method, url, token, headers=None):
-    """Makes an HTTP request with the specified method, URL, and headers."""
-    if headers is None:
-        headers = {}
-    headers.update({
-        'Content-Type': 'application/json',
-        'Authorization': f'Bearer {token}'
-    })
-    try:
-        response = requests.request(method, url, headers=headers, verify=False)
-        # print(f"[CITIZEN_API][{method}] {response}")
-        return response
-    except requests.exceptions.RequestException as e:
-        print(f"[CITIZEN_API][{method}] An error occurred: {e}")
-        return None
+    def get_consent_list(self, citizen):
+        url = f'{self.domain_mil}/list/{citizen}'
+        headers = { 'Content-Type': 'application/json', 'Authorization': f'Bearer {richiesta_con_token("token_send")}'}
+        return requests.request("GET", url, headers=headers, verify=False)
 
+    def get_consent_list_enabled(self, citizen):
+        url = f'{self.domain_mil}/list/{citizen}/enabled'
+        headers = { 'Content-Type': 'application/json', 'Authorization': f'Bearer {richiesta_con_token("token_send")}'}
+        return requests.request("GET", url, headers=headers, verify=False)
 
-def save_consent(citizen, tpp):
-    url = build_url(settings.endpoints.citizen.base_path, citizen, tpp)
-    print(f"[CITIZEN_API][SAVE_CONSENT] {url}")
-    token = bearer_token()
-    return make_request("POST", url, token)
+    def get_citizens_on_tpp(self, tpp):
+        url = f'{self.domain}/{tpp}'
+        headers = { 'Content-Type': 'application/json', 'Authorization': f'Bearer {richiesta_con_token("token_send")}'}
+        return requests.request("GET", url, headers=headers, verify=False)
 
+    def delete_consents(self, citizen):
+        url = f'{self.domain}/test/delete{citizen}'
+        url = f'http://10.11.0.121:8080/emd/citizen/test/delete/{citizen}'
+        headers = { 'Content-Type': 'application/json', 'Authorization': f'Bearer {richiesta_con_token("token_send")}'}
+        return requests.request("DELETE", url, headers=headers, verify=False)
 
-def get_consent(citizen, tpp):
-    url = build_url(settings.endpoints.citizen.base_path, citizen, tpp)
-    print(f"[CITIZEN_API][GET_CONSENT] {url}")
-    token = bearer_token()
-    return make_request("GET", url, token)
-
-
-def switch_state(citizen, tpp):
-    url = build_url(settings.endpoints.citizen.base_path, citizen, tpp)
-    print(f"[CITIZEN_API][SWITCH_STATE] {url}")
-    token = bearer_token()
-    return make_request("PUT", url, token)
-
-
-def get_consent_list(citizen):
-    url = build_url(settings.endpoints.citizen.base_path, "list", citizen)
-    print(f"[CITIZEN_API][GET_CONSENT_LIST] {url}")
-    token = bearer_token()
-    return make_request("GET", url, token)
-
-
-def get_consent_list_enabled(citizen):
-    url = build_url(settings.endpoints.citizen.base_path, "list", citizen, "enabled")
-    print(f"[CITIZEN_API][GET_CONSENT_LIST_ENABLED] {url}")
-    token = bearer_token()
-    return make_request("GET", url, token)
-
-
-def get_citizens_on_tpp(tpp):
-    url = build_url(settings.endpoints.citizen.base_path, tpp)
-    print(f"[CITIZEN_API][GET_CITIZENS_ON_TPP] {url}")
-    token = bearer_token()
-    return make_request("GET", url, token)
-
-
-def delete_consents(citizen):
-    #url = build_url(settings.endpoints.citizen.base_path, "test", citizen)
-    url = f'http://10.11.0.254:8080/emd/citizen/test/{citizen}'
-    print(f"[CITIZEN_API][DELETE] {url}")
-    token = bearer_token()
-    return make_request("DELETE", url, token)
