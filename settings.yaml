@@ -1,0 +1,409 @@
+secrets_path: "conf/emd_feature_secrets.yaml"
+environment: dev
+domain:
+  dev:  "https://api-io.dev.cstar.pagopa.it"
+  uat:  "https://api-io.uat.cstar.pagopa.it"
+  prod: ""
+
+domain_mil:
+  dev:  "https://mil.weu.internal.dev.cstar.pagopa.it"
+  uat:  "https://mil.weu.internal.uat.cstar.pagopa.it"
+  prod: ""
+
+endpoints:
+  base_path_tpp: "/emdtpp"
+  base_path_citizen: "/emdcitizen"
+  base_path: "/emd"
+
+  payment_core:
+    base_path: "/payment"
+    operations:
+      retrievalTokens:
+        method: POST
+        endpoint: "/retrievalTokens/{entityId}"
+        path_params:
+          - body_params:
+              - name: "RetrievalRequestDTO"
+                required: true
+          - name: "entityId"
+            type: string
+            required: true
+      getRetrieval:
+        method: GET
+        endpoint: "/retrievalTokens/{retrievalId}"
+        path_params:
+          - name: "retrievalId"
+            type: string
+            required: true
+      generateDeepLink:
+        method: GET
+        endpoint: "/token"
+        request_params:
+          - name: "retrievalId"
+            type: string
+            required: true
+          - name: "fiscalCode"
+            type: string
+            required: true
+          - name: "noticeNumber"
+            type: string
+            required: true
+
+
+  message_core:
+    base_path: "/message-core"
+    operations:
+      send:
+        method: POST
+        endpoint: "/sendMessage"
+        description: "Send message"
+        body_params:
+          - name: "MessageDTO"
+            required: true
+
+  tpp:
+    base_path: "/tpp"
+    operations:
+      getEnabledList:
+        method: POST
+        endpoint: "/list"
+        description: "Get list of tpp"
+        body_params:
+          - name: "TppIdList"
+            required: true
+      updateState:
+        method: PUT
+        endpoint: ""
+        description: "tppUpdateState to update"
+        body_params:
+          - name: "TppUpdateState"
+            required: true
+      save:
+        method: POST
+        endpoint: "/save"
+        description: "tppDTO to save"
+        body_params:
+          - name: "TppDTO"
+            required: true
+      updateTppDetails:
+        method: PUT
+        endpoint: "/update"
+        description: "TppDTOWithoutTokenSection to update"
+        body_params:
+          - name: "TppDTOWithoutTokenSection"
+            required: true
+      getTppByEntityId:
+        method: GET
+        endpoint: "/entityId/{entityId}"
+        description: "Get tpp by entityId"
+        path_params:
+          - name: "entityId"
+            type: string
+            required: true
+      updateTokenSection:
+        method: PUT
+        endpoint: "/update/{tppId}/token"
+        description: "Update TokenSection of a TPP"
+        body_params:
+          - name: "TokenSectionDTO"
+            required: true
+        path_params:
+          - name: "tppId"
+            type: string
+            required: true
+      getTppDetails:
+        method: GET
+        endpoint: "/{tppId}"
+        description: "Get tpp details"
+        path_params:
+          - name: "tppId"
+            type: string
+            required: true
+      getTokenSection:
+        method: GET
+        endpoint: "/{tppId}/token"
+        description: "Get TokenSection of a TPP"
+        path_params:
+          - name: "tppId"
+            type: string
+            required: true
+
+  citizen:
+    base_path: "/citizen"
+    operations:
+      saveCitizenConsent:
+        method: POST
+        endpoint: "/{fiscalCode}/{tppId}"
+        description: "Save citizen consent"
+        path_params:
+          - name: "fiscalCode"
+            type: string
+            required: true
+            pattern:  "(^([A-Za-z]{6}[0-9lmnpqrstuvLMNPQRSTUV]{2}[abcdehlmprstABCDEHLMPRST][0-9lmnpqrstuvLMNPQRSTUV]{2}[A-Za-z][0-9lmnpqrstuvLMNPQRSTUV]{3}[A-Za-z])$)|(^(\\d{11})$)"
+          - name: "tppId"
+            type: string
+            required: true
+            pattern:  "(^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}-\\d{13}$)"
+      stateSwitch:
+        method: PUT
+        endpoint: "/{fiscalCode}/{tppId}"
+        description: "State switch"
+        path_params:
+          - name: "fiscalCode"
+            type: string
+            required: true
+            pattern:  "(^([A-Za-z]{6}[0-9lmnpqrstuvLMNPQRSTUV]{2}[abcdehlmprstABCDEHLMPRST][0-9lmnpqrstuvLMNPQRSTUV]{2}[A-Za-z][0-9lmnpqrstuvLMNPQRSTUV]{3}[A-Za-z])$)|(^(\\d{11})$)"
+          - name: "tppId"
+            type: string
+            required: true
+            pattern:  "(^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}-\\d{13}$)"
+      getCitizenConsentStatus:
+        method: GET
+        endpoint: "/{fiscalCode}/{tppId}"
+        description: "Get citizen consent status"
+        path_params:
+          - name: "fiscalCode"
+            type: string
+            required: true
+            pattern: "(^([A-Za-z]{6}[0-9lmnpqrstuvLMNPQRSTUV]{2}[abcdehlmprstABCDEHLMPRST][0-9lmnpqrstuvLMNPQRSTUV]{2}[A-Za-z][0-9lmnpqrstuvLMNPQRSTUV]{3}[A-Za-z])$)|(^(\\d{11})$)"
+          - name: "tppId"
+            type: string
+            required: true
+            pattern:  "(^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}-\\d{13}$)"
+      getCitizenConsentsList:
+        method: GET
+        endpoint: "/list/{fiscalCode}"
+        description: "Get list of citizen consents"
+        path_params:
+          - name: "fiscalCode"
+            type: string
+            required: true
+            pattern: "(^([A-Za-z]{6}[0-9lmnpqrstuvLMNPQRSTUV]{2}[abcdehlmprstABCDEHLMPRST][0-9lmnpqrstuvLMNPQRSTUV]{2}[A-Za-z][0-9lmnpqrstuvLMNPQRSTUV]{3}[A-Za-z])$)|(^(\\d{11})$)"
+      getCitizenConsentsListEnabled:
+        method: GET
+        endpoint: "/list/{fiscalCode}/enabled"
+        description: "Get list of enabled citizen consents"
+        path_params:
+          - name: "fiscalCode"
+            type: string
+            required: true
+            pattern: "(^([A-Za-z]{6}[0-9lmnpqrstuvLMNPQRSTUV]{2}[abcdehlmprstABCDEHLMPRST][0-9lmnpqrstuvLMNPQRSTUV]{2}[A-Za-z][0-9lmnpqrstuvLMNPQRSTUV]{3}[A-Za-z])$)|(^(\\d{11})$)"
+      getCitizenEnabled:
+        method: GET
+        endpoint: "/{tppId}"
+        description: "Get citizen enabled on the given tpp"
+        path_params:
+          - name: "tppId"
+            type: string
+            required: true
+            pattern:  "(^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}-\\d{13}$)"
+
+
+TokenSectionDTO:
+  type: object
+  properties:
+    contentType:
+      type: string
+    pathAdditionalProperties:
+      type: object
+      additionalProperties:
+        type: string
+    bodyAdditionalProperties:
+      type: object
+      additionalProperties:
+        type: string
+
+TppDTOWithoutTokenSection:
+  type: object
+  properties:
+    tppId:
+      type: string
+    entityId:
+      type: string
+      required: true
+      pattern: "^(\\d{11}|[A-Za-z0-9]{16})$"
+    idPsp:
+      type: string
+      required: true
+    businessName:
+      type: string
+      required: true
+    legalAddress:
+      type: string
+      required: true
+    messageUrl:
+      type: string
+      required: true
+      pattern: "^(https?|ftp)://[^ /$.?#].[^ ]*$"
+    authenticationUrl:
+      type: string
+      required: true
+      pattern: "^(https?|ftp)://[^ /$.?#].[^ ]*$"
+    authenticationType:
+      type: object
+      properties:
+        type: string
+        required: true
+    contact:
+      type: object
+      properties:
+        name:
+          type: string
+          required: true
+        email:
+          type: string
+          required: true
+          pattern: "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2}"
+        number:
+          type: string
+          required: true
+          pattern: "^\\d{9,10}$"
+
+TppDTO:
+  type: object
+  properties:
+    tppId:
+      type: string
+    entityId:
+      type: string
+      required: true
+    idPsp:
+      type: string
+      required: true
+    businessName:
+      type: string
+      required: true
+    legalAddress:
+      type: string
+      required: true
+    messageUrl:
+      type: string
+      required: true
+    authenticationUrl:
+      type: string
+      required: true
+    authenticationType:
+      type: object
+      properties:
+        type: string
+        required: true
+    contact:
+      type: object
+      properties:
+        name:
+          type: string
+          required: true
+        email:
+          type: string
+          required: true
+          pattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+        phone:
+          type: string
+          required: true
+          pattern: "^\\d{9,10}$"
+
+TppUpdateState:
+  type: object
+  properties:
+    tppId:
+      type: string
+      required: true
+    state:
+      type: boolean
+      required: true
+
+TppIdList:
+  type: object
+  properties:
+    ids:
+      type: array
+      required: true
+      items:
+        type: string
+
+RetrievalRequestDTO:
+  type: object
+  properties:
+    agent:
+      type: string
+    originId:
+      type: string
+
+MessageDTO:
+  type: object
+  properties:
+    messageId:
+      type: string
+    recipientId:
+      type: string
+    triggerDateTime:
+      type: string
+    senderDescription:
+      type: string
+    messageUrl:
+      type: string
+    originId:
+      type: string
+    content:
+      type: string
+    associatedPayment:
+      type: boolean
+    idPsp:
+      type: string
+    channel:
+      type: object
+      properties:
+        status:
+          type: string
+
+CitizenA: "BRTVNL63E26X000A"
+CitizenB: "BRTVNL63E26X000B"
+CitizenC: "BRTVNL63E26X000C"
+CitizenD: "BRTVNL63E26X000D"
+
+CitizenS: "BRTVNL63E26X000S"
+
+TppFakeEntityIdA: "AAAAAAAAAAAAAAAA"
+TppFakeEntityIdB: "BBBBBBBBBBBBBBBB"
+TppFakeEntityIdC: "CCCCCCCCCCCCCCCC"
+TppFakeEntityIdD: "DDDDDDDDDDDDDDDD"
+
+TppFakeEntityIdS: "SSSSSSSSSSSSSSSS"
+
+TppFakeEntityId: "TPPFKB0000000000"
+
+TppDtoFake:
+  entityId: ""
+  businessName: "bussinessName"
+  messageUrl: "https://collaudo.codiceweb.com/test"
+  authenticationUrl: "https://collaudo.codiceweb.com/test"
+  idPsp: "mastercard123"
+  authenticationType: "OAUTH2"
+  legalAddress: "Via Piemonete 3"
+  contact:
+    name: "name"
+    number: "1234567890"
+    email: "email"
+  tokenSection:
+    bodyAdditionalProperties:
+      client_id: "client_id"
+      grant_type: "client_credentials"
+      client_secret: "client_secret"
+    contentType: "application/x-www-form-urlencoded"
+  paymentButton: "button"
+  agentDeepLinks:
+    ios: "https://mil.weu.internal.uat.cstar.pagopa.it/emdpaymentcore/stub/emd/payment/payment"
+
+TppNameA: "Fucino"
+AgentA: "ios"
+EntityIdA: "01234567899"
+OriginIdA: "OriginId"
+FiscalCodeA: "DNTCRL65S67M126L"
+NoticeNumberA: "3333333333"
+
+TppNameB: "Hype"
+AgentB: "ioS"
+EntityId: "123123123"
+OriginIdB: "OriginId"
+
+AgentC: "android"
