@@ -31,11 +31,12 @@ parameters:
       - tpp
       - citizen
       - sendMessage
+      - all
 stages:
   - stage: Feature_tests
     dependsOn: [ ]
     pool:
-      name: 'emd-${{ parameters.env }}-linux-app'
+      name: 'cstar-${{ parameters.env }}-linux-app'
     jobs:
       - job: "${{ upper(parameters.env) }}_Run_all_feature_tests"
         condition: and(succeeded(), or(eq('${{ parameters.tag }}', ''), eq('${{ parameters.tag }}', 'all')))
