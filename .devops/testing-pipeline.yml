@@ -36,7 +36,7 @@ stages:
   - stage: Feature_tests
     dependsOn: [ ]
     pool:
-      name: 'cstar-${{ parameters.env }}-linux-app'
+      name: 'cstar-${{ parameters.env }}-linux'
     jobs:
       - job: "${{ upper(parameters.env) }}_Run_all_feature_tests"
         condition: and(succeeded(), or(eq('${{ parameters.tag }}', ''), eq('${{ parameters.tag }}', 'all')))
