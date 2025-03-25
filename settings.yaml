@@ -1,5 +1,5 @@
 secrets_path: "conf/emd_feature_secrets.yaml"
-environment: dev
+TARGET_ENV: dev
 domain:
   dev:  "https://api-io.dev.cstar.pagopa.it"
   uat:  "https://api-io.uat.cstar.pagopa.it"

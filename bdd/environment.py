@@ -11,7 +11,6 @@ citizen_api = CitizenAPI()
 def before_feature(context, feature):
     context.citizens = {}
     context.tpps = {}
-
     payload = getattr(settings, "TppDtoFake", None)
     tpp_fake_a_id = getattr(settings, "TppFakeEntityIdA", None)
     tpp_fake_b_id = getattr(settings, "TppFakeEntityIdB", None)

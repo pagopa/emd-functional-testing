@@ -5,7 +5,7 @@ from api.bearer_token import richiesta_con_token
 class CitizenAPI:
 
     def __init__(self):
-        self.environment = settings.environment
+        self.environment = settings.TARGET_ENV
         self.domain = f'{settings.domain[self.environment]}{settings.endpoints.base_path}{settings.endpoints.citizen.base_path}'
         self.domain_mil = f'{settings.domain_mil[self.environment]}{settings.endpoints.base_path_citizen}{settings.endpoints.base_path}{settings.endpoints.citizen.base_path}'
 

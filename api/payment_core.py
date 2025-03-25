@@ -5,7 +5,7 @@ from api.bearer_token import richiesta_con_token
 class PaymentCoreAPI:
 
     def __init__(self):
-        self.environment = settings.environment
+        self.environment = settings.TARGET_ENV
         self.domain = f'{settings.domain[self.environment]}{settings.endpoints.base_path}{settings.endpoints.payment_core.base_path}'
 
     def retrieval_tokens(self, payload, tpp_name):

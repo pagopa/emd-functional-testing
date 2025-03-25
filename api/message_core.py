@@ -5,7 +5,7 @@ from api.bearer_token import richiesta_con_token
 class MessageCoreAPI:
 
     def __init__(self):
-        self.environment = settings.environment
+        self.environment = settings.TARGET_ENV
         self.domain = f'{settings.domain[self.environment]}{settings.endpoints.base_path}{settings.endpoints.message_core.base_path}'
 
 
