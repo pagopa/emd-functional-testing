@@ -30,8 +30,8 @@ parameters:
     values:
       - tpp
       - citizen
-      - message-core
-      - payment-core
+      - message
+      - payment
       - all
 stages:
   - stage: Feature_tests
@@ -49,9 +49,9 @@ stages:
             gestione citizen:
               current_tag: 'citizen'
             gestione invio messaggi:
-              current_tag: 'message-core'
+              current_tag: 'message'
             tentativo di pagamento:
-              current_tag: 'payment-core'
+              current_tag: 'payment'
         steps:
           - checkout: self
           - template: template\test-run.yml
