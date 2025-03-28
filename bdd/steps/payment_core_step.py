@@ -23,7 +23,8 @@ def step_check_not_onboarded(context, entity_id, agent, origin_id):
     origin_id = getattr(settings, origin_id, None)
 
     response = tpp_api.get_tpp_by_entity_id(entity_id)
-
+    print("TESTTT",response.json())
+    print("TESTTT",response.status_code)
     context.entity_id = entity_id
     context.origin_id = origin_id
     context.response_get_tpp_by_entity_id = response
