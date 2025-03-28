@@ -1,4 +1,4 @@
-@message_core
+@message
 Feature: Send a notification
 
     Scenario: Onboard user not already onboarded

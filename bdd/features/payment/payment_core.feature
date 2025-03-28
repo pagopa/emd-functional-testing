@@ -1,4 +1,4 @@
-@payment_core
+@payment
 Feature: Send a notification
 
     Scenario: The user makes a payment attempt for a valid tpp and agent

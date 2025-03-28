@@ -42,7 +42,7 @@ stages:
       - job: "${{ upper(parameters.env) }}_Run_all_feature_tests"
         condition: and(succeeded(), or(eq('${{ parameters.tag }}', ''), eq('${{ parameters.tag }}', 'all')))
         strategy:
-          maxParallel: 3
+          maxParallel: 4
           matrix:
             gestione tpp:
               current_tag: 'tpp'
