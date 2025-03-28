@@ -16,7 +16,6 @@ class TppAPI:
 
     def get_tpp_by_entity_id(self, entity_id):
         url = f'{self.domain_mil}/entityId/{entity_id}'
-        print("TESTTT",url)
         headers = { 'Content-Type': 'application/json', 'Authorization': f'Bearer {richiesta_con_token("token_send")}'}
         return requests.request("GET", url, headers=headers, verify=False)
 
