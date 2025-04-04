@@ -1,5 +1,5 @@
 # Feature testing
-A repository designed to collect tests that simulate the features provided by Piattaforma Unitaria.
+A repository designed to collect tests that simulate the features provided by EMD Courtesy Message.
 
 ## Installation
 Install [pipenv](https://pipenv.pypa.io/en/latest/):
