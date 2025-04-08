@@ -7,9 +7,6 @@ class TokenManager:
         self.tokens = {
             "token_tpp": {"value": None, "expires_at": 0},
             "token_send": {"value": None, "expires_at": 0},
-            "token_mil": {"value": None, "expires_at": 0},
-            "token_hype": {"value": None, "expires_at": 0},
-            "token_banca_del_fucino": {"value": None, "expires_at": 0},
             "token_emd_tpp_test": {"value": None, "expires_at": 0}
         }
 
@@ -36,9 +33,6 @@ class TokenManager:
             urls = {
                 "token_tpp": secrets.tpp_token_info.url,
                 "token_send": secrets.token_info.url,
-                "token_mil": secrets.mil_token_info.url,
-                "token_hype": secrets.hype_token_info.url,
-                "token_banca_del_fucino": secrets.banca_del_fucino_token_info.url,
                 "token_emd_tpp_test": secrets.emd_tpp_test_token_info.url
             }
 
@@ -57,21 +51,6 @@ class TokenManager:
                                 'client_secret': secrets.token_info.client_secret,
                                 'grant_type': secrets.token_info.grant_type
                                 },
-                "token_mil": {
-                                'client_id': secrets.mil_token_info.client_id,
-                                'client_secret': secrets.mil_token_info.client_secret,
-                                'grant_type': secrets.mil_token_info.grant_type
-                                },
-                "token_hype": {
-                                'client_id': secrets.hype_token_info.client_id,
-                                'client_secret': secrets.hype_token_info.client_secret,
-                                'grant_type': secrets.hype_token_info.grant_type
-                                },
-                "token_banca_del_fucino": {
-                                'client_id': secrets.banca_del_fucino_token_info.client_id,
-                                'client_secret': secrets.banca_del_fucino_token_info.client_secret,
-                                'grant_type': secrets.banca_del_fucino_token_info.grant_type
-                                },
                 "token_emd_tpp_test": {
                                 'client_id': secrets.emd_tpp_test_token_info.client_id,
                                 'client_secret': secrets.emd_tpp_test_token_info.client_secret,
@@ -81,7 +60,6 @@ class TokenManager:
 
             url = urls.get(token_name)
             payload = payloads.get(token_name)
-
             response = requests.request("POST", url, headers=headers, data=payload, verify=False)
 
             if response.status_code == 200:

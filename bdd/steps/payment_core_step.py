@@ -42,8 +42,8 @@ def step_check_agent_and_origin(context):
         "agent": context.agent,
         "originId": context.origin_id
     })
-    if context.tpp_name == "Fucino":
-        token = "token_banca_del_fucino"
+    if context.tpp_name == "TppNameA":
+        token = "token_emd_tpp_test"
     response = payment_core_api.retrieval_tokens(payload, token)
     assert response.status_code == 200
     response_data = response.json()
@@ -56,8 +56,8 @@ def step_check_agent_and_origin(context):
         "agent": context.agent,
         "originId": context.origin_id
     })
-    if context.tpp_name == "Fucino":
-        token = "token_banca_del_fucino"
+    if context.tpp_name == "TppNameA":
+        token = "token_emd_tpp_test"
     response = payment_core_api.retrieval_tokens(payload, token)
     assert response.status_code == 404
 
