@@ -5,6 +5,7 @@ from conf.configuration import secrets
 class TokenManager:
     def __init__(self):
         self.tokens = {
+            "token_tpp": {"value": None, "expires_at": 0},
             "token_send": {"value": None, "expires_at": 0},
             "token_mil": {"value": None, "expires_at": 0},
             "token_hype": {"value": None, "expires_at": 0},
@@ -33,6 +34,7 @@ class TokenManager:
     def request_new_token(self, token_name):
         try:
             urls = {
+                "token_tpp": secrets.tpp_token_info.url,
                 "token_send": secrets.token_info.url,
                 "token_mil": secrets.mil_token_info.url,
                 "token_hype": secrets.hype_token_info.url,
@@ -45,6 +47,11 @@ class TokenManager:
             }
 
             payloads = {
+                "token_tpp":  {
+                                'client_id': secrets.tpp_token_info.client_id,
+                                'client_secret': secrets.tpp_token_info.client_secret,
+                                'grant_type': secrets.tpp_token_info.grant_type
+                },
                 "token_send": {
                                 'client_id': secrets.token_info.client_id,
                                 'client_secret': secrets.token_info.client_secret,
