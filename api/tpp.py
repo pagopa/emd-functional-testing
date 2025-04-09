@@ -11,30 +11,30 @@ class TppAPI:
 
     def save_tpp(self, tpp):
         url = f'{self.domain}/save'
-        headers = { 'Content-Type': 'application/json', 'Authorization': f'Bearer {richiesta_con_token("token_send")}'}
+        headers = { 'Content-Type': 'application/json', 'Authorization': f'Bearer {richiesta_con_token("token_tpp")}'}
         return requests.request("POST", url, headers=headers, data=tpp, verify=False)
 
     def get_tpp_by_entity_id(self, entity_id):
         url = f'{self.domain_mil}/entityId/{entity_id}'
-        headers = { 'Content-Type': 'application/json', 'Authorization': f'Bearer {richiesta_con_token("token_send")}'}
+        headers = { 'Content-Type': 'application/json', 'Authorization': f'Bearer {richiesta_con_token("token_tpp")}'}
         return requests.request("GET", url, headers=headers, verify=False)
 
     def update_tpp(self, tpp):
         url = f'{self.domain}/update'
-        headers = {'Content-Type': 'application/json','Authorization': f'Bearer {richiesta_con_token("token_send")}'}
+        headers = {'Content-Type': 'application/json','Authorization': f'Bearer {richiesta_con_token("token_tpp")}'}
         return requests.request("PUT", url, headers=headers, data=tpp, verify=False)
 
     def update_status_tpp(self, tpp):
         url = f'{self.domain_mil}'
-        headers = {'Content-Type': 'application/json','Authorization': f'Bearer {richiesta_con_token("token_send")}'}
+        headers = {'Content-Type': 'application/json','Authorization': f'Bearer {richiesta_con_token("token_tpp")}'}
         return requests.request("PUT", url, headers=headers, data=tpp, verify=False)
 
     def get_tpp_info(self, tpp):
         url = f'{self.domain}/{tpp}'
-        headers = {'Content-Type': 'application/json','Authorization': f'Bearer {richiesta_con_token("token_send")}'}
+        headers = {'Content-Type': 'application/json','Authorization': f'Bearer {richiesta_con_token("token_tpp")}'}
         return requests.request("GET", url, headers=headers, verify=False)
 
     def delete_tpp(self, tpp):
         url = f'{self.domain_mil}/test/delete/{tpp}'
-        headers = {'Content-Type': 'application/json','Authorization': f'Bearer {richiesta_con_token("token_send")}'}
+        headers = {'Content-Type': 'application/json','Authorization': f'Bearer {richiesta_con_token("token_tpp")}'}
         return requests.request("DELETE", url, headers=headers, verify=False)
