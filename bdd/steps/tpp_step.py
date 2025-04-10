@@ -46,7 +46,7 @@ def step_update_request(context, tpp):
     context.tpps["tpp_fake"] = context.response.json()
 
 @when('an change state for {tpp} request arrives')
-def step_update_request(context, tpp):
+def step_change_request(context, tpp):
     tpp = getattr(settings, tpp, None)
     response = tpp_api.get_tpp_by_entity_id(tpp)
     tpp_id = response.json().get("tppId")
