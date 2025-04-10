@@ -1,6 +1,8 @@
 import requests
 import time
-from conf.configuration import secrets
+from conf import configuration
+
+secrets = configuration.secrets
 
 class TokenManager:
     def __init__(self):

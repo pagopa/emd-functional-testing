@@ -407,3 +407,7 @@ EntityId: "123123123"
 OriginIdB: "OriginId"
 
 AgentC: "android"
+
+
+CitizenFake: "AAAAAA00A01H703K"
+TppFake: "99999999999"

@@ -3,10 +3,13 @@ import json
 from behave import given
 from behave import then
 from behave import when
+from conf import configuration
+
 from api.tpp import TppAPI
-from conf.configuration import settings
 
 tpp_api = TppAPI()
+
+settings = configuration.settings
 
 @given('{tpp} not onboarded')
 def step_check_not_onboarded(context, tpp):

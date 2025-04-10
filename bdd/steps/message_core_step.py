@@ -5,10 +5,13 @@ import string
 from behave import given
 from behave import then
 from behave import when
+from conf import configuration
+
 from api.message_core import MessageCoreAPI
-from conf.configuration import settings
 
 message_core_api = MessageCoreAPI()
+
+settings = configuration.settings
 
 @given('a message for the {citizen}')
 def step_build_message(context, citizen):

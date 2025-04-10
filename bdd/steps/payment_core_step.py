@@ -3,12 +3,15 @@ import json
 from behave import given
 from behave import then
 from behave import when
+from conf import configuration
+
 from api.payment_core import PaymentCoreAPI
 from api.tpp import TppAPI
-from conf.configuration import settings
 
 payment_core_api = PaymentCoreAPI()
 tpp_api = TppAPI()
+
+settings = configuration.settings
 
 @given('the user decide to make a payment for TPP {tpp_name} and has chosen an agent {agent}')
 def step_make_payment(context, tpp_name, agent):

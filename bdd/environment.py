@@ -1,12 +1,13 @@
-import api.citizen as api_citizen
 import json
 
 from api.tpp import TppAPI
 from api.citizen import CitizenAPI
-from conf.configuration import settings
+from conf import configuration
 
 tpp_api = TppAPI()
 citizen_api = CitizenAPI()
+
+settings = configuration.settings
 
 def before_feature(context, feature):
     context.citizens = {}
