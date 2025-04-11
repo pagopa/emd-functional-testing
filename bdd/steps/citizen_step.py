@@ -211,9 +211,7 @@ def step_consent_list_are_enabled(context):
     for consent_id, consent_info in consents.items():
         tpp_state = consent_info.get("tppState")
         if not tpp_state:
-            raise AssertionError(
-                f"[CITIZEN_STEP][CONSENT_LIST_ARE_ENABLED] Expected all consents to be enabled"
-            )
+            raise AssertionError("[CITIZEN_STEP][CONSENT_LIST_ARE_ENABLED] Expected all consents to be enabled")
 
 
 @then('the get citizens onboarded list request fail')

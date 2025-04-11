@@ -1,5 +1,5 @@
 import time
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC
 
 from api.dovuti import get_processed_dovuto_list
 from api.enti import get_tipi_ente
@@ -14,6 +14,7 @@ from api.tipi_dovuto import get_motivo_riscossione
 from api.tipi_dovuto import get_cod_tassonomico
 from config.configuration import secrets
 
+strftime = '%Y/%m/%d'
 
 def get_user_id(user: str) -> str:
     if user == 'Amministratore Globale':
@@ -145,8 +146,8 @@ def get_tipo_dovuto_of_operator(token, cod_tipo_dovuto, ente_id):
 
 def retry_check_exists_processed_dovuto(token, ente_id, dovuto_iuv, tries=8, delay=2):
     count = 0
-    date_from = (datetime.utcnow() - timedelta(days=1)).strftime('%Y/%m/%d')
-    date_to = (datetime.utcnow() + timedelta(days=30)).strftime('%Y/%m/%d')
+    date_from = (datetime.now(UTC) - timedelta(days=1)).strftime(strftime)
+    date_to = (datetime.now(UTC) + timedelta(days=30)).strftime(strftime)
 
     res = get_processed_dovuto_list(token=token, ente_id=ente_id, date_from=date_from, date_to=date_to, iuv=dovuto_iuv)
 
@@ -167,8 +168,8 @@ def retry_check_exists_processed_dovuto(token, ente_id, dovuto_iuv, tries=8, del
 def retry_get_imported_flussi(token, ente_id, nome_flusso, field, expected_value,
                               tries=50, delay=3):
     count = 0
-    date_from = (datetime.utcnow() - timedelta(days=1)).strftime('%Y/%m/%d')
-    date_to = (datetime.utcnow() + timedelta(days=1)).strftime('%Y/%m/%d')
+    date_from = (datetime.now(UTC) - timedelta(days=1)).strftime(strftime)
+    date_to = (datetime.now(UTC) + timedelta(days=1)).strftime(strftime)
 
     res = get_imported_flussi(token=token, date_from=date_from, date_to=date_to,
                               ente_id=ente_id, nome_flusso=nome_flusso)
@@ -195,7 +196,7 @@ def retry_get_imported_flussi(token, ente_id, nome_flusso, field, expected_value
 
 def retry_get_list_flussi_export(token, ente_id, nome_flusso, tries=10, delay=3):
     count = 0
-    date_from = date_to = (datetime.utcnow()).strftime('%Y/%m/%d')
+    date_from = date_to = (datetime.now(UTC)).strftime(strftime)
 
     res = get_list_flussi_export(token=token, ente_id=ente_id, date_from=date_from, date_to=date_to,
                                  nome_flusso=nome_flusso)
