@@ -3,12 +3,15 @@ import json
 from behave import given
 from behave import then
 from behave import when
+from conf import configuration
+
 from api.payment_core import PaymentCoreAPI
 from api.tpp import TppAPI
-from conf.configuration import settings
 
 payment_core_api = PaymentCoreAPI()
 tpp_api = TppAPI()
+
+settings = configuration.settings
 
 @given('the user decide to make a payment for TPP {tpp_name} and has chosen an agent {agent}')
 def step_make_payment(context, tpp_name, agent):
@@ -37,7 +40,7 @@ def step_check_tpp_not_valid(context):
     assert context.response_get_tpp_by_entity_id.status_code == 404
 
 @then('if the agent is valid, the system will returns a 200 OK')
-def step_check_agent_and_origin(context):
+def step_check_agent_and_origin_ok(context):
     payload = json.dumps({
         "agent": context.agent,
         "originId": context.origin_id
@@ -51,7 +54,7 @@ def step_check_agent_and_origin(context):
     context.retrieval_tokens = response
 
 @then('if the agent is not valid, the system will returns a 404')
-def step_check_agent_and_origin(context):
+def step_check_agent_and_origin_not_ok(context):
     payload = json.dumps({
         "agent": context.agent,
         "originId": context.origin_id

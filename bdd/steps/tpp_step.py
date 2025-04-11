@@ -3,10 +3,13 @@ import json
 from behave import given
 from behave import then
 from behave import when
+from conf import configuration
+
 from api.tpp import TppAPI
-from conf.configuration import settings
 
 tpp_api = TppAPI()
+
+settings = configuration.settings
 
 @given('{tpp} not onboarded')
 def step_check_not_onboarded(context, tpp):
@@ -43,7 +46,7 @@ def step_update_request(context, tpp):
     context.tpps["tpp_fake"] = context.response.json()
 
 @when('an change state for {tpp} request arrives')
-def step_update_request(context, tpp):
+def step_change_request(context, tpp):
     tpp = getattr(settings, tpp, None)
     response = tpp_api.get_tpp_by_entity_id(tpp)
     tpp_id = response.json().get("tppId")

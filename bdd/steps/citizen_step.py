@@ -1,12 +1,15 @@
 from behave import given
 from behave import then
 from behave import when
+from conf import configuration
+
 from api.tpp import TppAPI
 from api.citizen import CitizenAPI
-from conf.configuration import settings
 
 tpp_api = TppAPI()
 citizen_api = CitizenAPI()
+
+settings = configuration.settings
 
 @given('{tpp} is a valid tpp')
 def step_check_tpp(context, tpp):
@@ -111,19 +114,19 @@ def step_get_consent(context, citizen, tpp):
 
 
 @when('a get consents list for {citizen} request arrives')
-def step_get_consent(context, citizen):
+def step_get_consent_list(context, citizen):
     citizen = getattr(settings, citizen, None)
     context.response = citizen_api.get_consent_list(citizen)
 
 
 @when('a get consents list enabled for {citizen} request arrives')
-def step_get_consent(context, citizen):
+def step_get_consent_list_enabled(context, citizen):
     citizen = getattr(settings, citizen, None)
     context.response = citizen_api.get_consent_list_enabled(citizen)
 
 
 @when('a get citizens onboarded list for {tpp} request arrives')
-def step_get_consent(context, tpp):
+def step_get_consent_on_tpp(context, tpp):
     tpp = getattr(settings, tpp, None)
     response = tpp_api.get_tpp_by_entity_id(tpp)
     tpp_id = response.json().get('tppId')
@@ -163,7 +166,7 @@ def step_state_change_request_fail(context):
 
 
 @then('the get consent state request fail')
-def step_get_consents_list_request_fail(context):
+def step_get_consents_state_request_fail(context):
     status_code = context.response.status_code
     assert status_code == 404
 
@@ -208,9 +211,7 @@ def step_consent_list_are_enabled(context):
     for consent_id, consent_info in consents.items():
         tpp_state = consent_info.get("tppState")
         if not tpp_state:
-            raise AssertionError(
-                f"[CITIZEN_STEP][CONSENT_LIST_ARE_ENABLED] Expected all consents to be enabled"
-            )
+            raise AssertionError("[CITIZEN_STEP][CONSENT_LIST_ARE_ENABLED] Expected all consents to be enabled")
 
 
 @then('the get citizens onboarded list request fail')
@@ -231,7 +232,7 @@ def step_tpp_consents_list_is(context):
 
 
 @then('the tpp consents list is not empty')
-def step_get_citizens_onboarded_list_request_successful(context):
+def step_get_citizens_list_request_successful(context):
     response_data = context.response.json()
     assert len(response_data) != 0
 

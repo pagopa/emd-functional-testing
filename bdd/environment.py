@@ -1,12 +1,13 @@
-import api.citizen as api_citizen
 import json
 
 from api.tpp import TppAPI
 from api.citizen import CitizenAPI
-from conf.configuration import settings
+from conf import configuration
 
 tpp_api = TppAPI()
 citizen_api = CitizenAPI()
+
+settings = configuration.settings
 
 def before_feature(context, feature):
     context.citizens = {}
@@ -16,21 +17,20 @@ def before_feature(context, feature):
     tpp_fake_b_id = getattr(settings, "TppFakeEntityIdB", None)
     tpp_fake_c_id = getattr(settings, "TppFakeEntityIdC", None)
     tpp_fake_d_id = getattr(settings, "TppFakeEntityIdD", None)
-
-    payload.entityId = tpp_fake_a_id
+    payload["entityId"] = tpp_fake_a_id
     response = tpp_api.save_tpp(json.dumps(payload))
     context.tpps["tpp_fake_a"] = response.json()
 
-    payload.entityId = tpp_fake_b_id
+    payload["entityId"] = tpp_fake_b_id
     response = tpp_api.save_tpp(json.dumps(payload))
     context.tpps["tpp_fake_b"] = response.json()
 
-    payload.entityId = tpp_fake_c_id
+    payload["entityId"] = tpp_fake_c_id
     response = tpp_api.save_tpp(json.dumps(payload))
     context.tpps["tpp_fake_c"] = response.json()
 
-    payload.entityId = tpp_fake_d_id
-    payload.state = False
+    payload["entityId"] = tpp_fake_d_id
+    payload["state"] = False
     response = tpp_api.save_tpp(json.dumps(payload))
     context.tpps["tpp_fake_d"] = response.json()
     citizen_s = getattr(settings, "CitizenS", None)
