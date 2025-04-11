@@ -48,6 +48,6 @@ jobs:
             -Dsonar.projectKey=${{ vars.SONARCLOUD_PROJECT_KEY }}
             -Dsonar.organization=${{ vars.SONARCLOUD_ORG }}
             -Dsonar.host.url=https://sonarcloud.io
-            -Dsonar.sources=api,bdd,conf,util
+            -Dsonar.sources=api,bdd,conf
             -Dsonar.tests=test
             -Dsonar.python.coverage.reportPaths=coverage.xml
