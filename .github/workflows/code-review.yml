@@ -28,12 +28,12 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install coverage pytest
+          pip install coverage pytest coverage-cobertura
 
       - name: Run tests and generate Cobertura coverage report
         run: |
           coverage run -m pytest
-          coverage xml -o coverage.xml
+          coverage-cobertura -o coverage.xml
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@v4
@@ -47,5 +47,4 @@ jobs:
             -Dsonar.host.url=https://sonarcloud.io
             -Dsonar.python.version=3.10
             -Dsonar.sources=.
-            -Dsonar.exclusions=**/__pycache__/**,**/*.pyc,**/tests/**
             -Dsonar.coverageReportPaths=coverage.xml
