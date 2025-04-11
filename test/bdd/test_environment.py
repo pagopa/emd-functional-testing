@@ -1,5 +1,4 @@
 from unittest.mock import patch, MagicMock
-from types import SimpleNamespace
 from bdd import environment
 
 
