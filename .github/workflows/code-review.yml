@@ -10,17 +10,17 @@ on:
 
 jobs:
   sonarqube:
-    name: SonarCloud Analysis
+    name: SonarCloud with Python
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v2
         with:
           python-version: "3.10"
 
@@ -30,13 +30,10 @@ jobs:
           pip install -r requirements.txt
           pip install coverage pytest
 
-      - name: Run tests and generate coverage report
+      - name: Run tests and generate coverage.xml
         run: |
           coverage run -m pytest
           coverage xml
-
-      - name: Display coverage.xml content (for debugging)
-        run: cat coverage.xml
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@v4
@@ -49,4 +46,6 @@ jobs:
             -Dsonar.organization=${{ vars.SONARCLOUD_ORG }}
             -Dsonar.host.url=https://sonarcloud.io
             -Dsonar.python.version=3.10
-            -Dsonar.sources=.
+            -Dsonar.sources=api,bdd,conf,util
+            -Dsonar.tests=test
+            -Dsonar.coverageReportPaths=coverage.xml
