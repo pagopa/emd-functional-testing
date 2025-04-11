@@ -50,3 +50,4 @@ jobs:
             -Dsonar.host.url=https://sonarcloud.io
             -Dsonar.sources=api,bdd,conf,util
             -Dsonar.tests=test
+            -Dsonar.python.coverage.reportPaths=coverage.xml
