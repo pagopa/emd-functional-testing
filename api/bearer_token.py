@@ -38,7 +38,6 @@ def request_new_token(token_name):
         url = urls.get(token_name)
         payload = payloads.get(token_name)
         response = requests.request("POST", url, headers=headers, data=payload, verify=False)
-
         if response.status_code == 200:
             response_data = response.json()
             return response_data.get("access_token"), response_data.get("expires_in",1600)

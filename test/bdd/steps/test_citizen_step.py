@@ -306,7 +306,7 @@ def test_step_state_change_request_fail():
     context.response.status_code = 404
     citizen_step.step_state_change_request_fail(context)
 
-def step_get_consents_state_request_fail():
+def test_step_get_consents_state_request_fail():
     context = MagicMock()
     context.response.status_code = 404
     citizen_step.step_get_consents_state_request_fail(context)
