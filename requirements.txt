@@ -4,7 +4,7 @@ certifi==2024.8.30
 charset-normalizer==3.3.2
 distlib==0.3.8
 dominate==2.9.0
-dynaconf==3.2.4
+dynaconf==3.2.13
 filelock==3.16.0
 idna==3.10
 Markdown==3.7
